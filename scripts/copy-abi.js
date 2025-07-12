@@ -2,8 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const artifactPath = path.join(__dirname, '../artifacts/contracts/MySTOToken.sol/MySTOToken.json');
-const abiDest = path.join(__dirname, '../frontend/src/MySTOToken.abi.json'); // 프론트엔드 src 폴더
+const artifactPath = path.join(__dirname, '../artifacts/contracts/UniTowerSTO.sol/UniTowerSTO.json');
+const abiDest = path.join(__dirname, '../frontend/src/UniTowerSTO.abi.json'); // 프론트엔드 src 폴더
 
 const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
 fs.writeFileSync(abiDest, JSON.stringify(artifact.abi, null, 2));

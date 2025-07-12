@@ -5,7 +5,7 @@
 ## 프로젝트 구조
 
 ```
-2025bcmd_starter/
+UniTowerSTO-project/
 ├── contracts/          # 스마트 컨트랙트
 │   ├── Lock.sol       # 예제 컨트랙트
 │   └── MySTOToken.sol # STO 토큰 컨트랙트
@@ -33,8 +33,8 @@
 
 1. 프로젝트 클론
 ```bash
-git clone https://github.com/fistline/2025bcmd_starter.git
-cd 2025bcmd_starter
+git clone https://github.com/kyh1126/UniTowerSTO-project.git
+cd UniTowerSTO-project
 ```
 
 2. 의존성 설치

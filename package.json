@@ -1,5 +1,5 @@
 {
-  "name": "2025bcmd_starter",
+  "name": "UniTowerSTO-project",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fistline/2025bcmd_starter.git"
+    "url": "git+https://github.com/kyh1126/UniTowerSTO-project.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fistline/2025bcmd_starter/issues"
+    "url": "https://github.com/kyh1126/UniTowerSTO-project/issues"
   },
-  "homepage": "https://github.com/fistline/2025bcmd_starter#readme",
+  "homepage": "https://github.com/kyh1126/UniTowerSTO-project#readme",
   "description": "",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.0.0",
