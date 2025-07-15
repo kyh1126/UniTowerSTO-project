@@ -9,7 +9,7 @@
   import { contractStore, accountStore, contractReadyStore } from './stores/contract.js';
 
   // (1) 배포된 컨트랙트 주소 입력
-  const CONTRACT_ADDRESS = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"; // 배포된 UniTowerSTO 컨트랙트 주소
+  const CONTRACT_ADDRESS = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"; // 배포된 UniTowerSTO 컨트랙트 주소
 
   // (2) 상태 변수
   let provider;

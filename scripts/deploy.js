@@ -1,12 +1,12 @@
 const hre = require("hardhat");
 
 async function main() {
-  // 테스트용 시간 설정 (현재 시간 기준)
+  // 테스트용 시간 설정 (충분한 청약 기간)
   const now = Math.floor(Date.now() / 1000);
-  const subscriptionStartTime = now; // 지금부터 시작
-  const subscriptionEndTime = now + (10 * 24 * 60 * 60); // 10일 후
-  const paymentDueTime = now + (12 * 24 * 60 * 60); // 12일 후
-  const allocationAnnouncementTime = now + (13 * 24 * 60 * 60); // 13일 후
+  const subscriptionStartTime = now - 100; // 100초 전부터 시작 (이미 시작됨)
+  const subscriptionEndTime = now + 300;   // 300초 후에 종료 (5분 후)
+  const paymentDueTime = now + 10000;      // 10000초 후 (약 2.8시간 후)
+  const allocationAnnouncementTime = now + 20000; // 20000초 후 (약 5.6시간 후)
 
   console.log("🚀 UniTower STO 배포 시작...");
   console.log("📅 청약 시작일:", new Date(subscriptionStartTime * 1000).toISOString());
