@@ -56,8 +56,8 @@ contract UniTowerSTO is ReentrancyGuard, Ownable {
     mapping(uint256 => Proposal) public proposals;
     mapping(address => mapping(uint256 => bool)) public hasVoted;
     
-    uint256 private proposalCounter;
-    uint256 private dividendCounter;
+    uint256 public proposalCounter;
+    uint256 public dividendCounter;
 
     // 이벤트
     event Subscription(address indexed investor, uint256 amount);

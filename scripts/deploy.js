@@ -1,16 +1,12 @@
 const hre = require("hardhat");
 
 async function main() {
-  // STO 기획서에 따른 시간 설정
-  // 청약기일: 2025년 8월 1일 ~ 2025년 8월 10일
-  // 납입기일: 2025년 8월 12일
-  // 배정공고일: 2025년 8월 13일
-  
-  // Unix timestamp로 변환 (2025년 기준)
-  const subscriptionStartTime = Math.floor(new Date('2025-08-01T00:00:00Z').getTime() / 1000);
-  const subscriptionEndTime = Math.floor(new Date('2025-08-10T23:59:59Z').getTime() / 1000);
-  const paymentDueTime = Math.floor(new Date('2025-08-12T23:59:59Z').getTime() / 1000);
-  const allocationAnnouncementTime = Math.floor(new Date('2025-08-13T00:00:00Z').getTime() / 1000);
+  // 테스트용 시간 설정 (현재 시간 기준)
+  const now = Math.floor(Date.now() / 1000);
+  const subscriptionStartTime = now; // 지금부터 시작
+  const subscriptionEndTime = now + (10 * 24 * 60 * 60); // 10일 후
+  const paymentDueTime = now + (12 * 24 * 60 * 60); // 12일 후
+  const allocationAnnouncementTime = now + (13 * 24 * 60 * 60); // 13일 후
 
   console.log("🚀 UniTower STO 배포 시작...");
   console.log("📅 청약 시작일:", new Date(subscriptionStartTime * 1000).toISOString());
