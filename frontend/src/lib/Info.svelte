@@ -1,4 +1,5 @@
 <script>
+  import { ethers } from 'ethers';
   import { contractStore, accountStore, contractReadyStore } from '../stores/contract.js';
   
   // store 구독
@@ -36,16 +37,16 @@
   async function loadDividends() {
     if (!contract || !contractReady || typeof contract.dividendCounter !== 'function') return;
     try {
-      const dividendCounter = await contract.dividendCounter();
-      dividends = [];
+      const dividendCounter = Number(await contract.dividendCounter());
+      const dList = [];
       for (let i = 1; i <= dividendCounter; i++) {
         try {
           const dividend = await contract.getDividendInfo(i);
-          dividends.push({
+          dList.push({
             id: i,
             quarter: Number(dividend[0]),
-            totalAmount: Number(dividend[1]),
-            distributedAmount: Number(dividend[2]),
+            totalAmount: ethers.formatEther(dividend[1]),
+            distributedAmount: ethers.formatEther(dividend[2]),
             timestamp: Number(dividend[3]),
             isDistributed: dividend[4]
           });
@@ -53,6 +54,7 @@
           // 배당이 존재하지 않으면 건너뛰기
         }
       }
+      dividends = dList;
     } catch (e) {
       console.error('배당 정보 조회 실패:', e);
     }
@@ -61,12 +63,12 @@
   async function loadProposals() {
     if (!contract || !contractReady || typeof contract.proposalCounter !== 'function') return;
     try {
-      const proposalCounter = await contract.proposalCounter();
-      proposals = [];
+      const proposalCounter = Number(await contract.proposalCounter());
+      const pList = [];
       for (let i = 1; i <= proposalCounter; i++) {
         try {
           const proposal = await contract.getProposalInfo(i);
-          proposals.push({
+          pList.push({
             id: i,
             description: proposal[0],
             forVotes: Number(proposal[1]),
@@ -80,6 +82,7 @@
           // 제안이 존재하지 않으면 건너뛰기
         }
       }
+      proposals = pList;
     } catch (e) {
       console.error('제안 정보 조회 실패:', e);
     }
@@ -93,12 +96,12 @@
     return '청약 대기';
   }
 
-  function getTotalDividendAmount() {
+  $: totalDividendAmount = (() => {
     if (!investorInfo || !dividends.length) return 0;
     return dividends
       .filter(d => d.isDistributed && investorInfo.hasPaid && investorInfo.lastDividendClaim >= d.id)
-      .reduce((sum, d) => sum + (d.totalAmount * investorInfo.allocatedAmount / 3000), 0);
-  }
+      .reduce((sum, d) => sum + (parseFloat(d.totalAmount) * investorInfo.allocatedAmount / 3000), 0);
+  })();
 
   // 컴포넌트 마운트 시 정보 로드 - 안전한 방식으로 변경
   $: if (contract && account && contractReady) {
@@ -151,11 +154,11 @@
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
             <span>청약 금액:</span>
-            <span class="font-mono">{investorInfo.subscribedAmount * 1000000}원</span>
+            <span class="font-mono">{investorInfo.subscribedAmount} ETH</span>
           </div>
           <div class="flex justify-between">
             <span>배정 금액:</span>
-            <span class="font-mono">{investorInfo.allocatedAmount * 1000000}원</span>
+            <span class="font-mono">{investorInfo.allocatedAmount} ETH</span>
           </div>
           <div class="flex justify-between">
             <span>납입 상태:</span>
@@ -178,7 +181,7 @@
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
             <span>총 배당 수령:</span>
-            <span class="font-mono">{getTotalDividendAmount().toFixed(6)} ETH</span>
+            <span class="font-mono">{totalDividendAmount.toFixed(6)} ETH</span>
           </div>
           <div class="flex justify-between">
             <span>등록된 배당:</span>

@@ -1,7 +1,18 @@
 const hre = require("hardhat");
 
 async function main() {
-  const CONTRACT_ADDRESS = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+  // 환경변수에서 컨트랙트 주소 가져오기
+  const fs = require('fs');
+  let CONTRACT_ADDRESS;
+  
+  try {
+    const envContent = fs.readFileSync('./frontend/.env', 'utf8');
+    const match = envContent.match(/VITE_CONTRACT_ADDRESS=([^\n]+)/);
+    CONTRACT_ADDRESS = match ? match[1] : "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+  } catch (error) {
+    CONTRACT_ADDRESS = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+  }
+  
   const INVESTOR_ADDRESS = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
   
   console.log("🔧 배정 처리 시작...");

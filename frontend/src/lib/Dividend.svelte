@@ -1,4 +1,5 @@
 <script>
+  import { ethers } from 'ethers';
   import { contractStore, accountStore, contractReadyStore } from '../stores/contract.js';
   
   // store 구독
@@ -16,23 +17,24 @@
     if (!contract || !contractReady) return;
     try {
       // 배당 카운터 조회 (실제로는 이벤트에서 가져와야 함)
-      const dividendCounter = await contract.dividendCounter();
-      dividends = [];
+      const dividendCounter = Number(await contract.dividendCounter());
+      const list = [];
       for (let i = 1; i <= dividendCounter; i++) {
         try {
           const dividend = await contract.getDividendInfo(i);
-          dividends.push({
+          list.push({
             id: i,
             quarter: Number(dividend[0]),
-            totalAmount: Number(dividend[1]),
-            distributedAmount: Number(dividend[2]),
+            totalAmount: ethers.formatEther(dividend[1]),
+            distributedAmount: ethers.formatEther(dividend[2]),
             timestamp: Number(dividend[3]),
             isDistributed: dividend[4]
           });
         } catch (e) {
-          // 배당이 존재하지 않으면 건너뛰기
+          console.error('배당 조회 에러:', i, e);
         }
       }
+      dividends = list;
     } catch (e) {
       console.error('배당 정보 조회 실패:', e);
       message = '배당 정보 조회 실패';

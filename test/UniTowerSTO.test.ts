@@ -86,7 +86,7 @@ describe("UniTowerSTO", function () {
       expect(await sto.PROJECT_NAME()).to.equal("UniTower STO");
       expect(await sto.PROJECT_SYMBOL()).to.equal("UNITOWER");
       expect(await sto.TOTAL_SUPPLY()).to.equal(3000);
-      expect(await sto.TOKEN_PRICE()).to.equal(1000000); // wei 단위가 아님
+      expect(await sto.TOKEN_PRICE()).to.equal(ethers.parseEther("1")); // 1 ETH per 구좌
       expect(await sto.MAX_SUBSCRIPTION_PER_PERSON()).to.equal(50);
       expect(await sto.MIN_SUBSCRIPTION()).to.equal(1);
     });
@@ -249,15 +249,15 @@ describe("UniTowerSTO", function () {
     });
 
     it("owner만 배당을 등록할 수 있어야 함", async function () {
-      await expect(sto.connect(investor1).registerDividend(1, ethers.parseEther("1000000")))
+      await expect(sto.connect(investor1).registerDividend(1, ethers.parseEther("1"), { value: ethers.parseEther("1") }))
         .to.be.revertedWithCustomError(sto, "OwnableUnauthorizedAccount");
     });
 
     it("정상적인 배당 등록이 성공해야 함", async function () {
-      await sto.connect(owner).registerDividend(1, ethers.parseEther("1000000"));
+      await sto.connect(owner).registerDividend(1, ethers.parseEther("1"), { value: ethers.parseEther("1") });
       const dividendInfo = await sto.getDividendInfo(1);
       expect(dividendInfo.quarter).to.equal(1);
-      expect(dividendInfo.totalAmount).to.equal(ethers.parseEther("1000000"));
+      expect(dividendInfo.totalAmount).to.equal(ethers.parseEther("1"));
     });
 
     it("0 또는 음수 배당액은 등록할 수 없어야 함", async function () {
@@ -266,12 +266,12 @@ describe("UniTowerSTO", function () {
     });
 
     it("0 또는 음수 분기는 등록할 수 없어야 함", async function () {
-      await expect(sto.connect(owner).registerDividend(0, ethers.parseEther("1000000")))
+      await expect(sto.connect(owner).registerDividend(0, ethers.parseEther("1"), { value: ethers.parseEther("1") }))
         .to.be.revertedWith("Invalid quarter");
     });
 
     it("납입하지 않은 투자자는 배당을 수령할 수 없어야 함", async function () {
-      await sto.connect(owner).registerDividend(1, ethers.parseEther("1000000"));
+      await sto.connect(owner).registerDividend(1, ethers.parseEther("1"), { value: ethers.parseEther("1") });
       await expect(sto.connect(investor2).claimDividend(1))
         .to.be.revertedWith("Not a paid investor");
     });
@@ -428,7 +428,7 @@ describe("UniTowerSTO", function () {
   describe("수수료 기능", function () {
     beforeEach(async function () {
       // 배당 등록 및 수령
-      await sto.connect(owner).registerDividend(1, ethers.parseEther("1000000"));
+      await sto.connect(owner).registerDividend(1, ethers.parseEther("1"), { value: ethers.parseEther("1") });
       // 배당 수령을 위한 설정 (실제로는 더 복잡한 설정 필요)
     });
 
@@ -487,7 +487,7 @@ describe("UniTowerSTO", function () {
       await sto.connect(investor1).subscribe(10);
       await timeTravel(100); // subscriptionEndTime + 10
       await sto.connect(owner).allocateTokens(investor1.address, 10);
-      await sto.connect(owner).registerDividend(1, ethers.parseEther("1000000"));
+      await sto.connect(owner).registerDividend(1, ethers.parseEther("1"), { value: ethers.parseEther("1") });
       await sto.connect(owner).createProposal("Test proposal", 7 * 24 * 3600);
     });
 
@@ -515,7 +515,7 @@ describe("UniTowerSTO", function () {
     it("배당 정보 조회가 정상적으로 작동해야 함", async function () {
       const dividendInfo = await sto.getDividendInfo(1);
       expect(dividendInfo.quarter).to.equal(1);
-      expect(dividendInfo.totalAmount).to.equal(ethers.parseEther("1000000"));
+      expect(dividendInfo.totalAmount).to.equal(ethers.parseEther("1"));
     });
 
     it("존재하지 않는 배당 조회하면 실패해야 함", async function () {
@@ -525,7 +525,7 @@ describe("UniTowerSTO", function () {
 
     it("컨트랙트 잔액 조회가 정상적으로 작동해야 함", async function () {
       const balance = await sto.getContractBalance();
-      expect(balance).to.equal(0); // 초기에는 0
+      expect(balance).to.equal(ethers.parseEther("1")); // 배당 등록으로 1 ETH 보유
     });
   });
 
@@ -560,9 +560,9 @@ describe("UniTowerSTO", function () {
     });
 
     it("배당 등록 시 이벤트가 발생해야 함", async function () {
-      await expect(sto.connect(owner).registerDividend(1, ethers.parseEther("1000000")))
+      await expect(sto.connect(owner).registerDividend(1, ethers.parseEther("1"), { value: ethers.parseEther("1") }))
         .to.emit(sto, "DividendDistributed")
-        .withArgs(1, ethers.parseEther("1000000"));
+        .withArgs(1, ethers.parseEther("1"));
     });
 
     it("제안 생성 시 이벤트가 발생해야 함", async function () {

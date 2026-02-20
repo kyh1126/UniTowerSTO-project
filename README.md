@@ -7,21 +7,22 @@
 ```
 UniTowerSTO-project/
 ├── contracts/          # 스마트 컨트랙트
-│   ├── Lock.sol       # 예제 컨트랙트
-│   └── MySTOToken.sol # STO 토큰 컨트랙트
+│   ├── Lock.sol            # 예제 컨트랙트
+│   └── UniTowerSTO.sol     # STO 토큰 컨트랙트
 ├── frontend/          # Svelte 프론트엔드 애플리케이션
 ├── scripts/           # 배포 및 유틸리티 스크립트
 ├── test/              # 스마트 컨트랙트 테스트
-└── ignition/          # Hardhat Ignition 배포 모듈
+└── docs/              # 기획서 및 보안 검토 문서
 ```
 
 ## 주요 기능
 
-### MySTOToken 컨트랙트
-- ERC20 표준 토큰 기능
-- 토큰 발행(Mint) - 소유자만 가능
-- 토큰 소각(Burn) - 모든 사용자 가능
-- 전송(Transfer) 및 승인(Approval) 기능
+### UniTowerSTO 컨트랙트
+- 청약(Subscribe) - 투자자가 원하는 구좌 수만큼 청약 신청
+- 배정(Allocate) - 관리자가 투자자에게 구좌 배정
+- 납입(Pay) - 배정받은 구좌에 대해 ETH로 납입
+- 배당(Dividend) - 관리자가 배당 등록, 투자자가 지분 비율대로 수령
+- DAO 투표(Vote) - 토큰 보유자가 프로젝트 주요 안건에 투표
 
 ## 시작하기
 
@@ -81,7 +82,7 @@ npx hardhat help                # 도움말
 npx hardhat test                # 테스트 실행
 REPORT_GAS=true npx hardhat test # 가스 리포트와 함께 테스트
 npx hardhat node                # 로컬 노드 실행
-npx hardhat ignition deploy ./ignition/modules/Lock.ts # 컨트랙트 배포
+npx hardhat run scripts/deploy.js --network localhost  # 컨트랙트 배포
 ```
 
 ## 환경 설정

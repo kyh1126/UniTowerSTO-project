@@ -16,12 +16,12 @@
     if (!contract || !contractReady) return;
     try {
       // 제안 카운터 조회
-      const proposalCounter = await contract.proposalCounter();
-      proposals = [];
+      const proposalCounter = Number(await contract.proposalCounter());
+      const list = [];
       for (let i = 1; i <= proposalCounter; i++) {
         try {
           const proposal = await contract.getProposalInfo(i);
-          proposals.push({
+          list.push({
             id: i,
             description: proposal[0],
             forVotes: Number(proposal[1]),
@@ -32,9 +32,10 @@
             canceled: proposal[6]
           });
         } catch (e) {
-          // 제안이 존재하지 않으면 건너뛰기
+          console.error('제안 조회 에러:', i, e);
         }
       }
+      proposals = list;
     } catch (e) {
       console.error('제안 정보 조회 실패:', e);
       message = '제안 정보 조회 실패';

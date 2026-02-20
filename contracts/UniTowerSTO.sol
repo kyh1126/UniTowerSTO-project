@@ -9,7 +9,7 @@ contract UniTowerSTO is ReentrancyGuard, Ownable {
     string public constant PROJECT_NAME = "UniTower STO";
     string public constant PROJECT_SYMBOL = "UNITOWER";
     uint256 public constant TOTAL_SUPPLY = 3000; // 3,000주
-    uint256 public constant TOKEN_PRICE = 1000000; // 1,000,000원 (wei 단위)
+    uint256 public constant TOKEN_PRICE = 1 ether; // 1 ETH per 구좌 (테스트용)
     uint256 public constant MAX_SUBSCRIPTION_PER_PERSON = 50; // 1인당 최대 50구좌
     uint256 public constant MIN_SUBSCRIPTION = 1; // 최소 1구좌
 
@@ -173,10 +173,11 @@ contract UniTowerSTO is ReentrancyGuard, Ownable {
     }
 
     // 배당 등록 (관리자만)
-    function registerDividend(uint256 quarter, uint256 totalAmount) external onlyOwner {
+    function registerDividend(uint256 quarter, uint256 totalAmount) external payable onlyOwner {
         // [보안] onlyOwner로 접근제어, 입력값 검증
         require(totalAmount > 0, "Invalid dividend amount");
         require(quarter > 0, "Invalid quarter");
+        require(msg.value == totalAmount, "Must send exact dividend amount");
         
         dividendCounter++;
         uint256 dividendId = dividendCounter;
@@ -186,7 +187,7 @@ contract UniTowerSTO is ReentrancyGuard, Ownable {
             totalAmount: totalAmount,
             distributedAmount: 0,
             timestamp: block.timestamp,
-            isDistributed: false
+            isDistributed: true
         });
 
         emit DividendDistributed(quarter, totalAmount);

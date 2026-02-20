@@ -27,10 +27,23 @@ async function main() {
   console.log("✅ UniTower STO 배포 완료!");
   console.log("📍 컨트랙트 주소:", sto.target);
   console.log("🏢 프로젝트명: UniTower STO");
-  console.log("💰 총 모집가액: 3,000,000,000원");
+  console.log("💰 총 모집가액: 3,000 ETH");
   console.log("📊 총 주식수: 3,000주");
-  console.log("💵 단위당 가격: 1,000,000원");
+  console.log("💵 단위당 가격: 1 ETH");
   console.log("👥 1인당 최대 청약: 50구좌");
+
+  // 프론트엔드 환경변수 파일 자동 생성
+  const fs = require('fs');
+  const envContent = `# UniTower STO 컨트랙트 주소
+VITE_CONTRACT_ADDRESS=${sto.target}
+
+# 네트워크 설정
+VITE_NETWORK_NAME=localhost
+VITE_CHAIN_ID=31337
+`;
+  
+  fs.writeFileSync('./frontend/.env', envContent);
+  console.log("📝 프론트엔드 환경변수 파일 생성 완료: frontend/.env");
 }
 
 main().catch((error) => {

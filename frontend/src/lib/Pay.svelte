@@ -45,8 +45,8 @@
     loading = true;
     message = '';
     try {
-      const requiredPayment = investorInfo.allocatedAmount * 1000000; // 1,000,000원 per 구좌
-      const tx = await contract.paySubscription({ value: BigInt(requiredPayment) });
+      const requiredPayment = BigInt(investorInfo.allocatedAmount) * BigInt("1000000000000000000"); // 1 ETH per 구좌
+      const tx = await contract.paySubscription({ value: requiredPayment });
       txHash = tx.hash;
       await tx.wait();
       message = '납입이 완료되었습니다!';
@@ -86,7 +86,7 @@
       <h3 class="font-bold mb-2">납입 정보</h3>
       <div class="text-sm">
         <div>배정 구좌: <span class="font-mono">{investorInfo.allocatedAmount}</span>구좌</div>
-        <div>납입 금액: <span class="font-mono">{investorInfo.allocatedAmount * 1000000}</span>원 (ETH)</div>
+        <div>납입 금액: <span class="font-mono">{investorInfo.allocatedAmount}</span> ETH</div>
       </div>
     </div>
     <button on:click={pay} class="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl py-2 font-bold shadow transition disabled:opacity-50" disabled={loading}>

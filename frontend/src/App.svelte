@@ -8,8 +8,8 @@
   import Info from './lib/Info.svelte';
   import { contractStore, accountStore, contractReadyStore } from './stores/contract.js';
 
-  // (1) 배포된 컨트랙트 주소 입력
-  const CONTRACT_ADDRESS = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"; // 배포된 UniTowerSTO 컨트랙트 주소
+  // (1) 환경변수에서 컨트랙트 주소 가져오기
+  const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
 
   // (2) 상태 변수
   let provider;
@@ -31,11 +31,15 @@
   // (3) 지갑 연결
   async function connectWallet() {
     try {
-      if (!window['ethereum']) {
+      // MetaMask 전용 provider 찾기 (Phantom 등 다른 지갑 무시)
+      const metamask = window['ethereum']?.providers
+        ? window['ethereum'].providers.find(p => p.isMetaMask && !p.isPhantom)
+        : (window['ethereum']?.isMetaMask && !window['ethereum']?.isPhantom ? window['ethereum'] : null);
+      if (!metamask) {
         alert("MetaMask를 설치해 주세요!");
         return;
       }
-      provider = new ethers.BrowserProvider(window['ethereum']);
+      provider = new ethers.BrowserProvider(metamask);
       await provider.send("eth_requestAccounts", []);
       signer = await provider.getSigner();
       account = ""; // 강제로 초기화
