@@ -21,9 +21,9 @@ async function main() {
   const contract = UniTowerSTO.attach(CONTRACT_ADDRESS);
 
   try {
-    // 배당 등록 (1분기, 총 1 ETH 배당)
+    // 배당 등록 (1분기, 총 100 ETH 배당)
     const quarter = 1;
-    const dividendAmount = hre.ethers.parseEther("1");
+    const dividendAmount = hre.ethers.parseEther("100");
 
     console.log("📊 배당 정보:");
     console.log("  - 분기:", quarter + "분기");
